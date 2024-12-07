@@ -1,0 +1,44 @@
+## Common IntelliJ Platform excludes
+.idea/
+*.iml
+*.ipr
+*.iws
+.idea_modules/
+out/
+
+## .NET Core
+bin/
+obj/
+/bin
+/obj
+*.suo
+*.user
+*.userosscache
+
+## VS / VS Code
+.vs/
+.vscode/
+*.nupkg
+**/[Pp]ackages/*
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## Database
+*.mdf
+*.ldf
+
+## Misc
+*.log
+.env
+appsettings.Development.json
+
+
+
+
