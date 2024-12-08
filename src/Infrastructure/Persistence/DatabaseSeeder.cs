@@ -16,7 +16,7 @@ public class DatabaseSeeder
     {
         if (!_context.Restaurants.Any())
         {
-            var owner = "admin"; // Or get from your user system
+            
 
             var restaurants = new List<Restaurant>
             {
