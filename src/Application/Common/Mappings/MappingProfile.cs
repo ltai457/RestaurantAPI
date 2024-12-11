@@ -1,5 +1,7 @@
 using System.Text.Encodings.Web;
+using Application.Dishes.Commands;
 using Application.Dishes.Dtos;
+using Application.Restaurants;
 using AutoMapper;
 using Domain.Entities;
 using Application.Restaurants.Queries;
@@ -21,5 +23,7 @@ public class MappingProfile : Profile
         
         CreateMap<CreateRestaurantCommand, Restaurant>();
         CreateMap<UpdateRestaurantCommand, Restaurant>();
+        CreateMap<CreateDishCommad, Dish>();
+        CreateMap<UpdateDishCommand, Dish>();
     }
 }

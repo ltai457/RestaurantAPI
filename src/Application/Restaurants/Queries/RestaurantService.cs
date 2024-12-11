@@ -1,3 +1,5 @@
+/*
+
 using Application.Common.Interface;
 using Application.Restaurants.Commands;
 using Application.Restaurants.Dtos;
@@ -62,4 +64,4 @@ public class RestaurantService : BaseService,IRestaurantService
    } 
    
    
-}
+}*/

@@ -8,12 +8,32 @@ using Infrastructure.Persistence;
 
 using AutoMapper;
 using Application.Common.Mappings;
+using Domain.Entities;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Service registration
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+   c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+   {
+      Type = SecuritySchemeType.Http,
+      Scheme = "bearer"
+   });
+   c.AddSecurityRequirement(new OpenApiSecurityRequirement
+   {
+      {
+         new OpenApiSecurityScheme
+         {
+            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearerAuth" }
+         },
+         new string[] {}  // This line was incorrect in your code
+      }
+   });
+});
 builder.Services.AddSwaggerGen(c =>
 {
    c.SwaggerDoc("v1", new OpenApiInfo 
@@ -23,7 +43,7 @@ builder.Services.AddSwaggerGen(c =>
        Description = "An API for managing restaurants and dishes"
    });
 });
-
+builder.Services.AddAuthentication("Bearer");
 // Database configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
    options.UseSqlServer(
@@ -35,10 +55,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IApplicationDbContext>(provider => 
    provider.GetRequiredService<ApplicationDbContext>());
 
+builder.Services.AddIdentityApiEndpoints<User>()
+   .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
 // In Program.cs
-builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+//builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
+// More verbose but very clear registration
+builder.Services.AddMediatR(cfg => 
+{
+   cfg.RegisterServicesFromAssembly(typeof(CreateRestaurantCommand).Assembly);
+});
+
 builder.Services.AddScoped<DatabaseSeeder>();
 
 // AutoMapper configuration
@@ -71,7 +100,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
+app.MapGroup("Api/Identity").MapIdentityApi<User>();
 // CORS configuration
 app.UseCors(builder =>
 {

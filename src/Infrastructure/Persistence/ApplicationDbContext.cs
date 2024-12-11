@@ -1,18 +1,29 @@
+// Infrastructure/Persistence/ApplicationDbContext.cs
+
 using Application.Common.Interface;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistence;  // Not Infrastructures
-public class ApplicationDbContext : DbContext, IApplicationDbContext
+namespace Infrastructure.Persistence;
+
+public class ApplicationDbContext : IdentityDbContext<User> , IApplicationDbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) 
+        : base(options)
+    {
+    }
 
     public DbSet<Restaurant> Restaurants => Set<Restaurant>();
     public DbSet<Dish> Dishes => Set<Dish>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configure Address as owned entity with required properties
+        // This is crucial - it sets up all Identity table configurations
+        base.OnModelCreating(modelBuilder);
+
+        // Your existing configurations
         modelBuilder.Entity<Restaurant>()
             .OwnsOne(r => r.Address, address =>
             {
@@ -21,9 +32,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
                 address.Property(a => a.PostalCode).IsRequired(false);
             });
 
-        // Configure decimal precision for Dish.Price
         modelBuilder.Entity<Dish>()
             .Property(d => d.Price)
-            .HasPrecision(18, 2);  // 18 digits total, 2 decimal places
+            .HasPrecision(18, 2);
     }
 }
