@@ -1,4 +1,4 @@
-using Application.Restaurants.Commands;
+/*using Application.Restaurants.Commands;
 using Application.Restaurants.Dtos;
 
 namespace Application.Common.Interface;
@@ -14,6 +14,6 @@ public interface IRestaurantService
     Task Update(int id, UpdateRestaurantCommand command);
     Task Delete(int id);
 }
-    
+    */
     
     
